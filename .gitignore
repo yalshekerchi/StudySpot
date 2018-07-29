@@ -1,1 +1,12 @@
 api_keys.py
+/node_modules
+dev.js
+bundle.js
+npm-debug.log
+.DS_Store
+*.sublime*
+*.code*
+
+# IntelliJ
+*.iml
+/.idea
