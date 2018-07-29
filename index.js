@@ -1,11 +1,16 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
+const keys = require('./config/keys');
+
+// Create express server
 const app = express();
 
-// Default route handler
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello World' });
-});
+// Connect to MongoDB
+mongoose.connect(keys.mongoURI);
+
+// Import routes
+const routes = require('./routes')(app);
 
 // Listen to port 5000
 const PORT = process.env.PORT || 5000;
