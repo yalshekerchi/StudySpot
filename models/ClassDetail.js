@@ -4,19 +4,19 @@ const { Schema } = mongoose;
 
 // Define ClassDetail Schema
 const classDetailSchema = new Schema({
-  class_number: Number,
-  subject: String,
-  catalog_number: String,
-  title: String,
-  section: String,
-  weekdays: String,
   start_time: String,
   end_time: String,
+  weekdays: {
+    M: Boolean,
+    T: Boolean,
+    W: Boolean,
+    Th: Boolean,
+    F: Boolean
+  },
   instructors: [String],
   building: { type: Schema.Types.ObjectId, ref: 'Building' },
   room: { type: Schema.Types.ObjectId, ref: 'Room' },
-  term: Number,
-  last_updated: String,
+  section: { type: Schema.Types.ObjectId, ref: 'Section' }
 });
 
 // First parameter is the name of the collection.

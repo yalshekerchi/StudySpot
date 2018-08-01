@@ -7,6 +7,7 @@ const keys = require('./config/keys');
 // Connect to MongoDB
 require('./models/Building');
 require('./models/Room');
+require('./models/Section');
 require('./models/ClassDetail');
 
 mongoose.connect(keys.mongoURI);
