@@ -21,6 +21,7 @@ app.use(bodyParser.json());
 // Import routes
 require('./routes')(app);
 require('./routes/scrapeRoutes')(app);
+require('./routes/apiRoutes')(app);
 
 // Listen to port 5000
 const PORT = process.env.PORT || 5000;

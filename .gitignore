@@ -1,4 +1,5 @@
 api_keys.py
+/.vscode
 /node_modules
 dev.js
 bundle.js
