@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
 
-import Layout from './layout';
+import Layout from './Layout';
 import Landing from './Landing';
-import RoomSearchForm from './RoomSearchForm';
+import RoomSearchForm from './RoomSearch/RoomSearchForm';
 
 class App extends Component {
   render() {

@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
 import moment from 'moment';
+import _ from 'lodash';
 
 import {
   MenuItem, ListItemIcon, Chip, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography,
-  FormControl, InputLabel, Grid, Button
+  FormControl, FormHelperText, Grid, Button
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Select } from 'redux-form-material-ui';
 import { ExpandMore, DomainRounded } from '@material-ui/icons';
-
 import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
-import * as actions from '../actions';
+
+import * as actions from '../../actions';
+import formFields from './formFields';
+
 
 const styles = theme => ({
   root: {
@@ -99,43 +102,59 @@ class RoomSelectForm extends Component {
     });
   }
 
+  renderValidationMessage = fieldName => (fields) => {
+    const { meta: { error, touched } } = fields[fieldName];
+    if (error && touched) {
+      return (
+        <FormHelperText error>{error}</FormHelperText>
+      );
+    }
+    return null;
+  }
+
   renderDateFormatInput(field) {
-    const { input } = field;
+    const { input, meta: { error, touched } } = field;
     const { classes } = this.props;
     return (
       <DateFormatInput
         onChange={input.onChange}
         value={!input.value ? null : new Date(input.value)}
         dateFormat='MM/dd/yyyy'
+        okToConfirm={true}
+        dialog={true}
         className={classes.dateTimeSelector}
+        error={(touched && error) ? error : undefined}
       />
     );
   }
 
   renderTimeFormatInput(field) {
-    const { input } = field;
+    const { input, meta: { error, touched } } = field;
     const { classes } = this.props;
     return (
       <TimeFormatInput
         onChange={input.onChange}
         value={!input.value ? null : new Date(input.value)}
+        okToConfirm={true}
+        dialog={true}
         className={classes.dateTimeSelector}
+        error={(touched && error) ? error : undefined}
       />
     );
   }
 
   handlePanelChange = panel => (event, expanded) => {
-    this.setState({ expanded: expanded ? panel : false })
+    this.setState({ expanded: expanded ? panel : false });
   }
 
   render() {
     const {
-      classes, selectedBuildings, selectedDate, selectedStartTime, selectedEndTime
+      classes, selectedBuildings, selectedDate, selectedStartTime, selectedEndTime, handleSubmit, invalid
     } = this.props;
     const { expanded } = this.state;
     return (
       <div className={classes.root}>
-        <form onSubmit={this.props.handleSubmit(values => console.log(values))}>
+        <form onSubmit={handleSubmit(values => console.log(values))}>
           <ExpansionPanel expanded={expanded === 'locationPanel'} onChange={this.handlePanelChange('locationPanel')}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Grid container spacing={24}>
@@ -144,7 +163,7 @@ class RoomSelectForm extends Component {
                 </Grid>
                 <Grid item xs={8} className={classes.gridItem}>
                   <Typography className={classes.secondaryHeading}>
-                  {(selectedBuildings && selectedBuildings.length > 0) ? `${selectedBuildings.length} Building(s) Selected` : 'Select Buildings'}
+                    {(selectedBuildings && selectedBuildings.length > 0) ? `${selectedBuildings.length} Building(s) Selected` : 'Select Buildings'}
                   </Typography>
                 </Grid>
               </Grid>
@@ -153,16 +172,18 @@ class RoomSelectForm extends Component {
               <Grid container spacing={24} className={classes.panelDetail}>
                 <Grid item xs={4} />
                 <Grid item xs={8}>
-                  <Field
-                    name='buildings'
-                    component={Select}
-                    renderValue={this.renderChips}
-                    format={value => value || []}
-                    className={classes.buildingSelector}
-                    multiple
-                  >
-                    {this.renderMenuItems()}
-                  </Field>
+                  <FormControl className={classes.buildingSelector}>
+                    <Field
+                      name='buildings'
+                      component={Select}
+                      renderValue={this.renderChips}
+                      format={value => value || []}
+                      multiple
+                    >
+                      {this.renderMenuItems()}
+                    </Field>
+                    <Fields names={Object.keys(formFields)} component={this.renderValidationMessage('buildings')}/>
+                  </FormControl>
                 </Grid>
               </Grid>
             </ExpansionPanelDetails>
@@ -240,9 +261,25 @@ class RoomSelectForm extends Component {
   }
 }
 
+function validate(values) {
+  const errors = {};
+
+  _.forOwn(formFields, (error, fieldName) => {
+    if (!values[fieldName] || values[fieldName].length === 0) {
+      errors[fieldName] = error;
+    }
+  });
+
+  if (values.startTime > values.endTime) {
+    errors.endTime = 'End time needs occur after start time';
+  }
+
+  return errors;
+}
+
 function mapStateToProps(state) {
   const selector = formValueSelector('searchForm');
-  return { 
+  return {
     selectedDate: selector(state, 'date'),
     selectedStartTime: selector(state, 'startTime'),
     selectedEndTime: selector(state, 'endTime'),
@@ -252,7 +289,7 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-  reduxForm({ form: 'searchForm' }),
+  reduxForm({ form: 'searchForm', validate }),
   connect(mapStateToProps, actions),
   withStyles(styles)
 )(RoomSelectForm);
