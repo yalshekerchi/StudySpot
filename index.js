@@ -9,7 +9,7 @@ const keys = require('./config/keys');
 require('./models/Building');
 require('./models/Room');
 require('./models/Section');
-require('./models/ClassDetail');
+require('./models/ClassSlot');
 
 mongoose.connect(keys.mongoURI);
 

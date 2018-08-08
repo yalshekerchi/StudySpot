@@ -1,12 +1,13 @@
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const axios = require('axios');
+const moment = require('moment');
 const keys = require('../config/keys');
 
 const Building = mongoose.model('Building');
 const Room = mongoose.model('Room');
 const Section = mongoose.model('Section');
-const ClassDetail = mongoose.model('ClassDetail');
+const ClassSlot = mongoose.model('ClassSlot');
 
 const UWATERLOO_URL = 'https://api.uwaterloo.ca/v2';
 const term = '1189';
@@ -41,7 +42,7 @@ module.exports = (app) => {
             topic: sectionData.topic,
             term: sectionData.term
           }).save();
-          // console.log('Added Section:', sectionData.subject, sectionData.catalog_number, sectionData.section);
+          console.log('Added Section:', sectionData.subject, sectionData.catalog_number, sectionData.section);
         }
 
         // Iterate over all classes for the section
@@ -101,44 +102,38 @@ module.exports = (app) => {
             }
 
             // Create class if not in db
-            const re = /(M)*(T(?!h))*(W)*(Th)*(F)*/g;
-            let classDetail = await ClassDetail.findOne({
-              // TODO: Optimize query
-              section: section.id,
-              start_time: new Date(`1970-01-01T ${classData.date.start_time}`),
-              end_time: new Date(`1970-01-01T ${classData.date.end_time}`),
-              weekdays: {
-                M: Boolean(classData.date.weekdays.replace(re, '$1')),
-                T: Boolean(classData.date.weekdays.replace(re, '$2')),
-                W: Boolean(classData.date.weekdays.replace(re, '$3')),
-                Th: Boolean(classData.date.weekdays.replace(re, '$4')),
-                F: Boolean(classData.date.weekdays.replace(re, '$5'))
-              },
-              instructors: classData.instructors,
-              building: building.id,
-              room: room.id
-            });
+            const days = classData.date.weekdays.match(/(M)*(T(?!h))*(W)*(Th)*(F)*/).splice(1, 5);
+            const re = /(M)*(T(?!h))*(W)*(Th)*(F)*/;
 
-            if (!classDetail) {
-              classDetail = await new ClassDetail({
-                section: section.id,
-                start_time: new Date(`1970-01-01T ${classData.date.start_time}`),
-                end_time: new Date(`1970-01-01T ${classData.date.end_time}`),
-                weekdays: {
-                  M: Boolean(classData.date.weekdays.replace(re, '$1')),
-                  T: Boolean(classData.date.weekdays.replace(re, '$2')),
-                  W: Boolean(classData.date.weekdays.replace(re, '$3')),
-                  Th: Boolean(classData.date.weekdays.replace(re, '$4')),
-                  F: Boolean(classData.date.weekdays.replace(re, '$5'))
-                },
-                instructors: classData.instructors,
-                building: building.id,
-                room: room.id
-              }).save();
-              // console.log('Added Class:', sectionData.subject, sectionData.catalog_number, sectionData.section, classData.date.weekday, classData.date.start_time, classData.date.end_time);
+            for (const day of days) {
+              if (day) {
+                let classSlot = await ClassSlot.findOne({
+                  // TODO: Optimize query
+                  section: section.id,
+                  start_time: moment(classData.date.start_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                  end_time: moment(classData.date.end_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                  day,
+                  instructors: classData.instructors,
+                  building: building.id,
+                  room: room.id
+                });
 
-              await Room.update({ _id: room.id }, { $push: { classes: classDetail } }).exec();
-              await Section.update({ _id: section.id }, { $push: { classes: classDetail } }).exec();
+                if (!classSlot) {
+                  classSlot = await new ClassSlot({
+                    section: section.id,
+                    start_time: moment(classData.date.start_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                    end_time: moment(classData.date.end_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                    day,
+                    instructors: classData.instructors,
+                    building: building.id,
+                    room: room.id
+                  }).save();
+                  // console.log('Added Class:', sectionData.subject, sectionData.catalog_number, sectionData.section, classData.date.day, classData.date.start_time, classData.date.end_time);
+
+                  await Room.update({ _id: room.id }, { $push: { classes: classSlot } }).exec();
+                  await Section.update({ _id: section.id }, { $push: { classes: classSlot } }).exec();
+                }
+              }
             }
           }
         }
