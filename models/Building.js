@@ -9,7 +9,7 @@ const buildingSchema = new Schema({
   building_name: String,
   latitude: Number,
   longitude: Number,
-  rooms: [{ type: Schema.Types.ObjectId, ref: 'room' }]
+  rooms: [{ type: Schema.Types.ObjectId, ref: 'Room' }]
 });
 
 // First parameter is the name of the collection.

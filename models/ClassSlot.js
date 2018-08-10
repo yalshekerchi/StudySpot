@@ -2,17 +2,11 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-// Define ClassDetail Schema
-const classDetailSchema = new Schema({
-  start_time: String,
-  end_time: String,
-  weekdays: {
-    M: Boolean,
-    T: Boolean,
-    W: Boolean,
-    Th: Boolean,
-    F: Boolean
-  },
+// Define ClassSlot Schema
+const classSlotSchema = new Schema({
+  start_time: Number,
+  end_time: Number,
+  day: String,
   instructors: [String],
   building: { type: Schema.Types.ObjectId, ref: 'Building' },
   room: { type: Schema.Types.ObjectId, ref: 'Room' },
@@ -20,4 +14,4 @@ const classDetailSchema = new Schema({
 });
 
 // First parameter is the name of the collection.
-mongoose.model('ClassDetail', classDetailSchema);
+mongoose.model('ClassSlot', classSlotSchema);
