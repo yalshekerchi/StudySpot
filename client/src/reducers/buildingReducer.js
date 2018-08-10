@@ -4,7 +4,7 @@ import { FETCH_BUILDINGS } from '../actions/types';
 export default function (state = [], action) {
   switch (action.type) {
     case FETCH_BUILDINGS:
-      return _.orderBy(action.payload, ['building_code']);
+      return _.orderBy(action.payload, ['buildingCode']);
     default:
       return state;
   }

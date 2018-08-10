@@ -4,8 +4,8 @@ const { Schema } = mongoose;
 
 // Define ClassSlot Schema
 const classSlotSchema = new Schema({
-  start_time: Number,
-  end_time: Number,
+  startTime: Number,
+  endTime: Number,
   day: String,
   instructors: [String],
   building: { type: Schema.Types.ObjectId, ref: 'Building' },

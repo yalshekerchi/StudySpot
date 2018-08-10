@@ -9,8 +9,8 @@ module.exports = (app) => {
   app.get('/api/buildings', async (req, res) => {
     const buildings = await Building.find({})
       .select({
-        building_code: true,
-        building_name: true,
+        buildingCode: true,
+        buildingName: true,
         latitude: true,
         longitude: true,
       })
@@ -20,9 +20,9 @@ module.exports = (app) => {
   });
 
   app.get('/api/rooms', async (req, res) => {
-    const { building_code } = req.headers;
+    const { buildingCode } = req.headers;
     try {
-      const building = await Building.findOne({ building_code }).exec();
+      const building = await Building.findOne({ buildingCode }).exec();
 
       const rooms = await Room.find({ building: building.id })
         .populate('building', { rooms: false })
@@ -31,7 +31,7 @@ module.exports = (app) => {
           select: { section: true },
           populate: {
             path: 'section',
-            select: { subject: true, catalog_number: true, section: true }
+            select: { subject: true, catalogNumber: true, section: true }
           }
         })
         .exec();
@@ -60,7 +60,7 @@ module.exports = (app) => {
     try {
       const selectedBuildings = await Building
         .find({
-          building_code: {
+          buildingCode: {
             $in: buildings
           }
         })
@@ -73,14 +73,14 @@ module.exports = (app) => {
           $and: [
             {
               $or: [
-                { start_time: { $gte: startTime } },
-                { end_time: { $gte: startTime } }
+                { startTime: { $gte: startTime } },
+                { endTime: { $gte: startTime } }
               ]
             },
             {
               $or: [
-                { start_time: { $lte: endTime } },
-                { end_time: { $lte: endTime } }
+                { startTime: { $lte: endTime } },
+                { endTime: { $lte: endTime } }
               ]
             }
           ]

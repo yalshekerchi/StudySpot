@@ -25,24 +25,24 @@ module.exports = (app) => {
       for (const sectionData of schedulesReq.data.data) {
         // Create section if not in db
         let section = await Section.findOne({
-          class_number: sectionData.class_number,
+          classNumber: sectionData.class_number,
         });
 
         if (!section) {
           section = await new Section({
             subject: sectionData.subject,
-            catalog_number: sectionData.catalog_number,
+            catalogNumber: sectionData.catalog_number,
             units: sectionData.units,
             title: sectionData.title,
             note: sectionData.note,
-            class_number: sectionData.class_number,
+            classNumber: sectionData.class_number,
             section: sectionData.section,
             campus: sectionData.campus,
-            associated_class: sectionData.associated_class,
+            associatedClass: sectionData.associated_class,
             topic: sectionData.topic,
             term: sectionData.term
           }).save();
-          console.log('Added Section:', sectionData.subject, sectionData.catalog_number, sectionData.section);
+          console.log('Added Section:', section.subject, section.catalogNumber, section.section);
         }
 
         // Iterate over all classes for the section
@@ -51,7 +51,7 @@ module.exports = (app) => {
           if (classData.location.building) {
             // Create building if not in db
             let building = await Building.findOne({
-              building_code: classData.location.building
+              buildingCode: classData.location.building
             }).exec();
 
             if (!building) {
@@ -76,27 +76,27 @@ module.exports = (app) => {
               }
 
               building = await new Building({
-                building_id: buildingReq.data.data.building_id,
-                building_code: classData.location.building,
-                building_name: buildingReq.data.data.building_name,
+                buildingId: buildingReq.data.data.building_id,
+                buildingCode: classData.location.building,
+                buildingName: buildingReq.data.data.building_name,
                 latitude: buildingReq.data.data.latitude,
                 longitude: buildingReq.data.data.longitude,
               }).save();
-              console.log('Added Building:', building.building_code);
+              console.log('Added Building:', building.buildingCode);
             }
 
             // Create room if not in db
             let room = await Room.findOne({
-              room_number: classData.location.room,
+              roomNumber: classData.location.room,
               building: building.id
             });
 
             if (!room) {
               room = await new Room({
-                room_number: classData.location.room,
+                roomNumber: classData.location.room,
                 building: building.id,
               }).save();
-              // console.log('Added Room:', building.building_code, room.room_number);
+              // console.log('Added Room:', building.buildingCode, room.roomNumber);
 
               await Building.update({ _id: building.id }, { $push: { rooms: room } }).exec();
             }
@@ -110,8 +110,8 @@ module.exports = (app) => {
                 let classSlot = await ClassSlot.findOne({
                   // TODO: Optimize query
                   section: section.id,
-                  start_time: moment(classData.date.start_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
-                  end_time: moment(classData.date.end_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                  startTime: moment(classData.date.start_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                  endTime: moment(classData.date.end_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
                   day,
                   instructors: classData.instructors,
                   building: building.id,
@@ -121,14 +121,14 @@ module.exports = (app) => {
                 if (!classSlot) {
                   classSlot = await new ClassSlot({
                     section: section.id,
-                    start_time: moment(classData.date.start_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
-                    end_time: moment(classData.date.end_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                    startTime: moment(classData.date.start_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                    endTime: moment(classData.date.end_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
                     day,
                     instructors: classData.instructors,
                     building: building.id,
                     room: room.id
                   }).save();
-                  // console.log('Added Class:', sectionData.subject, sectionData.catalog_number, sectionData.section, classData.date.day, classData.date.start_time, classData.date.end_time);
+                  // console.log('Added Class:', section.subject, section.catalogNumber, section.section, classSlot.day, classSlot.start_time, classSlot.end_time);
 
                   await Room.update({ _id: room.id }, { $push: { classes: classSlot } }).exec();
                   await Section.update({ _id: section.id }, { $push: { classes: classSlot } }).exec();
@@ -143,28 +143,4 @@ module.exports = (app) => {
     res.send({});
   });
   /* eslint-enable no-restricted-syntax, no-await-in-loop */
-
-  app.get('/api/rooms', async (req, res) => {
-    const { building_code } = req.headers;
-    console.log(req.headers);
-    try {
-      const building = await Building.findOne({ building_code }).exec();
-
-      const rooms = await Room.find({ building: building.id })
-        .populate('building', { rooms: false })
-        .populate({
-          path: 'classes',
-          select: { section: true },
-          populate: {
-            path: 'section',
-            select: { subject: true, catalog_number: true, section: true }
-          }
-        })
-        .exec();
-
-      return res.send(rooms);
-    } catch (err) {
-      return res.status(404).send(err);
-    }
-  });
 };

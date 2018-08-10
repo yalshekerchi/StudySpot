@@ -92,11 +92,11 @@ class RoomSelectForm extends Component {
   renderMenuItems() {
     return this.props.buildings.map((item) => {
       return (
-        <MenuItem value={item.building_code} key={item.building_code}>
+        <MenuItem value={item.buildingCode} key={item.buildingCode}>
           <ListItemIcon>
             <DomainRounded />
           </ListItemIcon>
-          {item.building_code}
+          {item.buildingCode}
         </MenuItem>
       );
     });
