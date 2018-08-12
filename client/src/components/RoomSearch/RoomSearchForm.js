@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
 import moment from 'moment';
 import _ from 'lodash';
 
 import {
-  MenuItem, ListItemIcon, Chip, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography,
-  FormControl, FormHelperText, Grid, Button
+  MenuItem, ListItemIcon, Chip, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
+  Typography, FormControl, FormHelperText, Grid, Button
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Select } from 'redux-form-material-ui';
@@ -66,7 +67,7 @@ class RoomSelectForm extends Component {
     super(props);
 
     this.state = {
-      expanded: null,
+      expanded: [],
     };
 
     this.renderChips = this.renderChips.bind(this);
@@ -144,18 +145,18 @@ class RoomSelectForm extends Component {
   }
 
   handlePanelChange = panel => (event, expanded) => {
-    this.setState({ expanded: expanded ? panel : false });
+    this.setState({ expanded: expanded ? panel : [] });
   }
 
   render() {
     const {
-      classes, selectedBuildings, selectedDate, selectedStartTime, selectedEndTime, handleSubmit, invalid
+      classes, selectedBuildings, selectedDate, selectedStartTime, selectedEndTime, handleSubmit, history
     } = this.props;
     const { expanded } = this.state;
     return (
       <div className={classes.root}>
-        <form onSubmit={handleSubmit(values => console.log(values))}>
-          <ExpansionPanel expanded={expanded === 'locationPanel'} onChange={this.handlePanelChange('locationPanel')}>
+        <form onSubmit={handleSubmit(values => this.props.fetchAvailableRooms(values, history))}>
+          <ExpansionPanel expanded={expanded.includes('locationPanel')} onChange={this.handlePanelChange(['locationPanel'])}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Grid container spacing={24}>
                 <Grid item xs={4} className={classes.gridItem}>
@@ -182,13 +183,13 @@ class RoomSelectForm extends Component {
                     >
                       {this.renderMenuItems()}
                     </Field>
-                    <Fields names={Object.keys(formFields)} component={this.renderValidationMessage('buildings')}/>
+                    <Fields names={Object.keys(formFields)} component={this.renderValidationMessage(['buildings'])}/>
                   </FormControl>
                 </Grid>
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-          <ExpansionPanel expanded={expanded === 'datePanel'} onChange={this.handlePanelChange('datePanel')}>
+          <ExpansionPanel expanded={expanded.includes('datePanel')} onChange={this.handlePanelChange(['datePanel'])}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Grid container spacing={24}>
                 <Grid item xs={4}>
@@ -213,7 +214,7 @@ class RoomSelectForm extends Component {
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-          <ExpansionPanel expanded={expanded === 'timePanel'} onChange={this.handlePanelChange('timePanel')}>
+          <ExpansionPanel expanded={expanded.includes('timePanel')} onChange={this.handlePanelChange(['timePanel'])}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Grid container spacing={24}>
                 <Grid item xs={4}>
@@ -239,7 +240,7 @@ class RoomSelectForm extends Component {
                     />
                   </Grid>
                   <Grid item xs={4} className={classes.gridCenter}>
-                  <Typography className={classes.secondaryHeading}>End Time</Typography>
+                    <Typography className={classes.secondaryHeading}>End Time</Typography>
                   </Grid>
                   <Grid item xs={8}>
                     <Field
@@ -251,7 +252,12 @@ class RoomSelectForm extends Component {
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <div className={classes.button}>
-            <Button variant='contained' color='primary' type='submit'>
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+              onClick={() => {this.handlePanelChange(['locationPanel', 'datePanel', 'timePanel'])(null, true)}}
+            >
               Continue
             </Button>
           </div>
@@ -291,5 +297,6 @@ function mapStateToProps(state) {
 export default compose(
   reduxForm({ form: 'searchForm', validate }),
   connect(mapStateToProps, actions),
-  withStyles(styles)
+  withStyles(styles),
+  withRouter
 )(RoomSelectForm);

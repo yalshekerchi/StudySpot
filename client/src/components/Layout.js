@@ -41,7 +41,7 @@ const styles = theme => ({
 });
 
 const menuItems = [
-  { label: 'Available Room Search', route: '/room-search', disabled: false },
+  { label: 'Available Room Search', route: '/search/new', disabled: false },
   { label: 'Room Schedule Explorer', route: '/room-schedule', disabled: true },
   { label: 'Course Schedule Explorer', route: '/course-schedule', disabled: true }
 ];

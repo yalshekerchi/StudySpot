@@ -5,6 +5,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import Layout from './Layout';
 import Landing from './Landing';
 import RoomSearchForm from './RoomSearch/RoomSearchForm';
+import BuildingList from './BuildingList';
 
 class App extends Component {
   render() {
@@ -13,7 +14,8 @@ class App extends Component {
         <BrowserRouter>
           <Layout>
             <Route exact={true} path='/' component={Landing} />
-            <Route exact={true} path='/room-search' component={RoomSearchForm} />
+            <Route exact={true} path='/search/' component={BuildingList} />
+            <Route path='/search/new' component={RoomSearchForm} />
           </Layout>
         </BrowserRouter>
       </div>
