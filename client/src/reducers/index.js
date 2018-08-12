@@ -2,10 +2,10 @@ import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import buildingReducer from './buildingReducer';
-import availableRoomsReducer from './availableRoomsReducer';
+import availableBuildingsReducer from './availableBuildingsReducer';
 
 export default combineReducers({
   buildings: buildingReducer,
-  availableRooms: availableRoomsReducer,
+  availableBuildings: availableBuildingsReducer,
   form: formReducer
 });

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
+import { NavLink } from 'react-router-dom';
 import GeoPattern from 'geopattern';
 
 import {
@@ -18,8 +19,8 @@ const styles = theme => ({
   },
   content: {
     paddingBottom: '16px !important',
-    textAlign: 'center'
-  },
+    textAlign: 'center',
+  }
 });
 
 class BuildingList extends Component {
@@ -27,29 +28,29 @@ class BuildingList extends Component {
     const { classes } = this.props;
 
     return buildings.map(building => (
-      <Grid item xs={6} sm={3}>
-        <Card key={building.buildingCode}>
-          <CardMedia
-            className={classes.media}
-            image={GeoPattern.generate(building.buildingCode).toDataUri()}
-          />
-          <CardContent className={classes.content}>
-            <Typography variant="headline">
-              {building.buildingCode}
-            </Typography>
-          </CardContent>
-        </Card>
+      <Grid item xs={6} sm={3} key={building.buildingCode}>
+        <NavLink to={`/search/${building.buildingCode}`} style={{ textDecoration: 'none' }}>
+          <Card>
+            <CardMedia
+              className={classes.media}
+              image={GeoPattern.generate(building.buildingCode).toDataUri()}
+            />
+            <CardContent className={classes.content}>
+              <Typography variant="headline">
+                {building.buildingCode}
+              </Typography>
+            </CardContent>
+          </Card>
+        </NavLink>
       </Grid>
     ));
   }
 
   render() {
-    const { classes } = this.props;
-
     return (
       <div>
         <Grid container spacing={24}>
-          {this.renderBuildingItems(this.props.availableRooms)}
+          {this.renderBuildingItems(this.props.availableBuildings)}
         </Grid>
       </div>
     );
@@ -58,7 +59,7 @@ class BuildingList extends Component {
 
 function mapStateToProps(state) {
   return {
-    availableRooms: state.availableRooms
+    availableBuildings: state.availableBuildings
   };
 }
 

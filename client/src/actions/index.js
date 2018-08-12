@@ -1,14 +1,14 @@
 import axios from 'axios';
 import moment from 'moment';
 
-import { FETCH_BUILDINGS, FETCH_AVAILABLE_ROOMS } from './types';
+import { FETCH_BUILDINGS, FETCH_AVAILABLE_BUILDINGS } from './types';
 
 export const fetchBuildings = () => async (dispatch) => {
   const res = await axios.get('/api/buildings');
   dispatch({ type: FETCH_BUILDINGS, payload: res.data });
 };
 
-export const fetchAvailableRooms = (values, history) => async (dispatch) => {
+export const fetchAvailableBuildings = (values, history) => async (dispatch) => {
   const reqBody = {
     buildings: values.buildings,
     date: moment(values.date).format('YYYYMMDD'),
@@ -18,5 +18,5 @@ export const fetchAvailableRooms = (values, history) => async (dispatch) => {
   console.log(reqBody);
   const res = await axios.post('/api/room_search', reqBody);
   history.push('/search');
-  dispatch({ type: FETCH_AVAILABLE_ROOMS, payload: res.data });
+  dispatch({ type: FETCH_AVAILABLE_BUILDINGS, payload: res.data });
 };

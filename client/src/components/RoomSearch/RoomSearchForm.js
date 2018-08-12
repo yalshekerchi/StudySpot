@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
+import {
+  reduxForm, Field, Fields, formValueSelector
+} from 'redux-form';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -155,7 +157,7 @@ class RoomSelectForm extends Component {
     const { expanded } = this.state;
     return (
       <div className={classes.root}>
-        <form onSubmit={handleSubmit(values => this.props.fetchAvailableRooms(values, history))}>
+        <form onSubmit={handleSubmit(values => this.props.fetchAvailableBuildings(values, history))}>
           <ExpansionPanel expanded={expanded.includes('locationPanel')} onChange={this.handlePanelChange(['locationPanel'])}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Grid container spacing={24}>
@@ -256,7 +258,7 @@ class RoomSelectForm extends Component {
               variant='contained'
               color='primary'
               type='submit'
-              onClick={() => {this.handlePanelChange(['locationPanel', 'datePanel', 'timePanel'])(null, true)}}
+              onClick={() => { this.handlePanelChange(['locationPanel', 'datePanel', 'timePanel'])(null, true); }}
             >
               Continue
             </Button>
