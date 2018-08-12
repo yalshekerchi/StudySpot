@@ -117,8 +117,9 @@ class BuildingDetail extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
+  const building = _.find(state.availableBuildings, { buildingCode: ownProps.match.params.code });
   return {
-    building: _.find(state.availableBuildings, 'buildingCode', ownProps.match.params.code)
+    building
   };
 }
 
