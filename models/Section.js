@@ -5,14 +5,14 @@ const { Schema } = mongoose;
 // Define Section Schema
 const sectionSchema = new Schema({
   subject: String,
-  catalog_number: String,
+  catalogNumber: String,
   units: Number,
   title: String,
   note: String,
-  class_number: Number,
+  classNumber: Number,
   section: String,
   campus: String,
-  associated_class: Number,
+  associatedClass: Number,
   topic: String,
   classes: [{ type: Schema.Types.ObjectId, ref: 'ClassDetail' }],
   term: Number

@@ -4,9 +4,9 @@ const { Schema } = mongoose;
 
 // Define Building Schema
 const buildingSchema = new Schema({
-  building_id: String,
-  building_code: String,
-  building_name: String,
+  buildingId: String,
+  buildingCode: String,
+  buildingName: String,
   latitude: Number,
   longitude: Number,
   rooms: [{ type: Schema.Types.ObjectId, ref: 'Room' }]
