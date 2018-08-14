@@ -14,11 +14,11 @@ class App extends Component {
       <div>
         <BrowserRouter>
           <Layout>
-            <Route exact={true} path='/' component={Landing} />
-            <Route exact={true} path='/search' component={BuildingList} />
+            <Route exact={true} path="/" component={Landing} />
+            <Route exact={true} path="/search" component={RoomSearchForm} />
             <Switch>
-              <Route path='/search/new' component={RoomSearchForm} />
-              <Route path='/search/:code' component={BuildingDetail} />
+              <Route path="/search/results" component={BuildingList} />
+              <Route path="/search/:code" component={BuildingDetail} />
             </Switch>
           </Layout>
         </BrowserRouter>

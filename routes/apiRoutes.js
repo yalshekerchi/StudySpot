@@ -111,7 +111,6 @@ module.exports = app => {
 
   app.post('/api/search/buildings', async (req, res) => {
     const { buildings, date, endTime, startTime } = req.body;
-
     let day = moment(date, 'YYYYMMDD').format('dd');
     day = day === 'Th' ? day : day[0];
 
@@ -152,7 +151,6 @@ module.exports = app => {
         );
         return modifiedBuilding;
       });
-
       return res.send(emptyRoomsResult);
     } catch (err) {
       return res.status(404).send(err);

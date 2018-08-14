@@ -23,6 +23,6 @@ export const fetchAvailableBuildings = (values, history) => async dispatch => {
   };
   console.log(reqBody);
   const res = await axios.post('/api/search/buildings', reqBody);
-  history.push('/search');
+  history.push('/search/results');
   dispatch({ type: FETCH_AVAILABLE_BUILDINGS, payload: res.data });
 };
