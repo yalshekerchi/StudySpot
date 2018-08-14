@@ -20,7 +20,7 @@ const styles = theme => ({
     flexGrow: 1
   },
   media: {
-    paddingBottom: 'calc(100% - 72px)'
+    paddingBottom: 'calc(100% - 84px)'
   },
   content: {
     paddingBottom: '16px !important',
@@ -46,6 +46,9 @@ class BuildingList extends Component {
             <CardContent className={classes.content}>
               <Typography variant="headline">
                 {building.buildingCode}
+              </Typography>
+              <Typography color="textSecondary">
+                Rooms: {building.rooms.length}
               </Typography>
             </CardContent>
           </Card>

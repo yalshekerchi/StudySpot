@@ -22,7 +22,7 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Select } from 'redux-form-material-ui';
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore, Search } from '@material-ui/icons';
 import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
 
 import * as actions from '../../actions';
@@ -68,6 +68,9 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     margin: theme.spacing.unit * 3
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit
   }
 });
 
@@ -307,7 +310,7 @@ class RoomSelectForm extends Component {
           </ExpansionPanel>
           <div className={classes.button}>
             <Button
-              variant="contained"
+              variant="extendedFab"
               color="primary"
               type="submit"
               onClick={() => {
@@ -318,7 +321,8 @@ class RoomSelectForm extends Component {
                 ])(null, true);
               }}
             >
-              Continue
+              <Search className={classes.extendedIcon} />
+              Search
             </Button>
           </div>
         </form>
