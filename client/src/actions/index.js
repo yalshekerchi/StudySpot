@@ -16,7 +16,7 @@ export const fetchAvailableBuildings = (values, history) => async (dispatch) => 
     endTime: moment(values.endTime).diff(moment(values.endTime).startOf('day'), 'seconds')
   };
   console.log(reqBody);
-  const res = await axios.post('/api/room_search', reqBody);
+  const res = await axios.post('/api/search/buildings', reqBody);
   history.push('/search');
   dispatch({ type: FETCH_AVAILABLE_BUILDINGS, payload: res.data });
 };
