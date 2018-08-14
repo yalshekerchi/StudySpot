@@ -106,7 +106,7 @@ module.exports = (app) => {
     }
   });
 
-  app.post('/api/room/buildings', async (req, res) => {
+  app.post('/api/search/buildings', async (req, res) => {
     const {
       buildings,
       date,
