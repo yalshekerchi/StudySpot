@@ -14,7 +14,7 @@ const sectionSchema = new Schema({
   campus: String,
   associatedClass: Number,
   topic: String,
-  classes: [{ type: Schema.Types.ObjectId, ref: 'ClassDetail' }],
+  classes: [{ type: Schema.Types.ObjectId, ref: 'ClassSlot' }],
   term: Number
 });
 
