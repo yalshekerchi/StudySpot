@@ -8,7 +8,8 @@ import _ from 'lodash';
 
 import {
   MenuItem,
-  ListItemIcon,
+  ListItemText,
+  Checkbox,
   Chip,
   ExpansionPanel,
   ExpansionPanelSummary,
@@ -21,7 +22,7 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Select } from 'redux-form-material-ui';
-import { ExpandMore, DomainRounded } from '@material-ui/icons';
+import { ExpandMore } from '@material-ui/icons';
 import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
 
 import * as actions from '../../actions';
@@ -99,12 +100,18 @@ class RoomSelectForm extends Component {
   }
 
   renderMenuItems() {
-    return this.props.buildings.map(item => (
+    const { buildings, selectedBuildings } = this.props;
+
+    return buildings.map(item => (
       <MenuItem value={item.buildingCode} key={item.buildingCode}>
-        <ListItemIcon>
-          <DomainRounded />
-        </ListItemIcon>
-        {item.buildingCode}
+        <Checkbox
+          checked={
+            !!(
+              selectedBuildings && selectedBuildings.includes(item.buildingCode)
+            )
+          }
+        />
+        <ListItemText primary={item.buildingCode} />
       </MenuItem>
     ));
   }
@@ -207,8 +214,13 @@ class RoomSelectForm extends Component {
                       renderValue={this.renderChips}
                       format={value => value || []}
                       multiple
+                      MenuProps={{
+                        style: {
+                          maxHeight: '500px'
+                        }
+                      }}
                     >
-                      {this.renderMenuItems()}
+                      {this.renderMenuItems(selectedBuildings)}
                     </Field>
                     <Fields
                       names={Object.keys(formFields)}

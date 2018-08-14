@@ -146,7 +146,7 @@ class Layout extends Component {
         <div className={classes.root}>
           <AppBar postition="absolute" className={classes.appBar}>
             <Toolbar>
-              <div component={Link} to="/" className={classes.toolbarContent}>
+              <div className={classes.toolbarContent}>
                 <Hidden smDown>
                   <Typography
                     component={Link}
