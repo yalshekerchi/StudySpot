@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const moment = require('moment');
@@ -12,20 +11,26 @@ const ClassSlot = mongoose.model('ClassSlot');
 const UWATERLOO_URL = 'https://api.uwaterloo.ca/v2';
 const term = '1189';
 
-module.exports = (app) => {
+module.exports = app => {
   app.get('/scrape', async (req, res) => {
-    const subjectsReq = await axios.get(`${UWATERLOO_URL}/codes/subjects.json?key=${keys.uWaterlooAPI}`);
+    const subjectsReq = await axios.get(
+      `${UWATERLOO_URL}/codes/subjects.json?key=${keys.uWaterlooAPI}`
+    );
 
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     for (const subjectData of subjectsReq.data.data) {
-      const schedulesReq = await axios.get(`${UWATERLOO_URL}/terms/${term}/${subjectData.subject}/schedule.json?key=${keys.uWaterlooAPI}`);
+      const schedulesReq = await axios.get(
+        `${UWATERLOO_URL}/terms/${term}/${
+          subjectData.subject
+        }/schedule.json?key=${keys.uWaterlooAPI}`
+      );
       console.log('Requested Schedule for', subjectData.subject);
 
       // Iterate over all senctions for a particular subject
       for (const sectionData of schedulesReq.data.data) {
         // Create section if not in db
         let section = await Section.findOne({
-          classNumber: sectionData.class_number,
+          classNumber: sectionData.class_number
         });
 
         if (!section) {
@@ -42,7 +47,12 @@ module.exports = (app) => {
             topic: sectionData.topic,
             term: sectionData.term
           }).save();
-          console.log('Added Section:', section.subject, section.catalogNumber, section.section);
+          console.log(
+            'Added Section:',
+            section.subject,
+            section.catalogNumber,
+            section.section
+          );
         }
 
         // Iterate over all classes for the section
@@ -68,7 +78,10 @@ module.exports = (app) => {
                   break;
               }
 
-              const buildingReq = await axios.get(`${UWATERLOO_URL}/buildings/${buildingCodeOveride || classData.location.building}.json?key=${keys.uWaterlooAPI}`);
+              const buildingReq = await axios.get(
+                `${UWATERLOO_URL}/buildings/${buildingCodeOveride ||
+                  classData.location.building}.json?key=${keys.uWaterlooAPI}`
+              );
               if (buildingReq.data.meta.status !== 200) {
                 console.log('Invalid Building:', classData.location.building);
                 console.log(buildingReq.data.meta);
@@ -80,7 +93,7 @@ module.exports = (app) => {
                 buildingCode: classData.location.building,
                 buildingName: buildingReq.data.data.building_name,
                 latitude: buildingReq.data.data.latitude,
-                longitude: buildingReq.data.data.longitude,
+                longitude: buildingReq.data.data.longitude
               }).save();
               console.log('Added Building:', building.buildingCode);
             }
@@ -94,24 +107,34 @@ module.exports = (app) => {
             if (!room) {
               room = await new Room({
                 roomNumber: classData.location.room,
-                building: building.id,
+                building: building.id
               }).save();
               // console.log('Added Room:', building.buildingCode, room.roomNumber);
 
-              await Building.update({ _id: building.id }, { $push: { rooms: room } }).exec();
+              await Building.update(
+                { _id: building.id },
+                { $push: { rooms: room } }
+              ).exec();
             }
 
             // Create class if not in db
-            const days = classData.date.weekdays.match(/(M)*(T(?!h))*(W)*(Th)*(F)*/).splice(1, 5);
-            const re = /(M)*(T(?!h))*(W)*(Th)*(F)*/;
+            const days = classData.date.weekdays
+              .match(/(M)*(T(?!h))*(W)*(Th)*(F)*/)
+              .splice(1, 5);
 
             for (const day of days) {
               if (day) {
                 let classSlot = await ClassSlot.findOne({
                   // TODO: Optimize query
                   section: section.id,
-                  startTime: moment(classData.date.start_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
-                  endTime: moment(classData.date.end_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                  startTime: moment(classData.date.start_time, 'HH:mm').diff(
+                    moment().startOf('day'),
+                    'seconds'
+                  ),
+                  endTime: moment(classData.date.end_time, 'HH:mm').diff(
+                    moment().startOf('day'),
+                    'seconds'
+                  ),
                   day,
                   instructors: classData.instructors,
                   building: building.id,
@@ -121,8 +144,14 @@ module.exports = (app) => {
                 if (!classSlot) {
                   classSlot = await new ClassSlot({
                     section: section.id,
-                    startTime: moment(classData.date.start_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
-                    endTime: moment(classData.date.end_time, 'HH:mm').diff(moment().startOf('day'), 'seconds'),
+                    startTime: moment(classData.date.start_time, 'HH:mm').diff(
+                      moment().startOf('day'),
+                      'seconds'
+                    ),
+                    endTime: moment(classData.date.end_time, 'HH:mm').diff(
+                      moment().startOf('day'),
+                      'seconds'
+                    ),
                     day,
                     instructors: classData.instructors,
                     building: building.id,
@@ -130,8 +159,14 @@ module.exports = (app) => {
                   }).save();
                   // console.log('Added Class:', section.subject, section.catalogNumber, section.section, classSlot.day, classSlot.start_time, classSlot.end_time);
 
-                  await Room.update({ _id: room.id }, { $push: { classes: classSlot } }).exec();
-                  await Section.update({ _id: section.id }, { $push: { classes: classSlot } }).exec();
+                  await Room.update(
+                    { _id: room.id },
+                    { $push: { classes: classSlot } }
+                  ).exec();
+                  await Section.update(
+                    { _id: section.id },
+                    { $push: { classes: classSlot } }
+                  ).exec();
                 }
               }
             }

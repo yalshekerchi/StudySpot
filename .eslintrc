@@ -1,13 +1,19 @@
 {
-  "parser": "babel-eslint",
-  "plugins": [
-    "react"
-  ],
-  "rules": {
-    "no-unused-vars": 0,
-    "comma-dangle": 0,
-    "class-methods-use-this": 0,
-    "no-console": "off"
+  "env": {
+    "browser": true,
+    "jest": true
   },
-  "extends": "airbnb-base"
+  "parser": "babel-eslint",
+  "extends": ["airbnb-base", "plugin:prettier/recommended", "plugin:react/recommended"],
+  "rules": {
+    "prettier/prettier": ["error", {
+      "singleQuote": true
+    }],
+    "class-methods-use-this": 0,
+    "linebreak-style": ["error", "unix"],
+    "react/jsx-filename-extension": ["error", {
+      "extensions": [".js", ".jsx"]
+    }],
+    "react/prop-types": 0
+  }
 }

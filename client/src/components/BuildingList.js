@@ -5,21 +5,26 @@ import { NavLink } from 'react-router-dom';
 import GeoPattern from 'geopattern';
 
 import {
-  withStyles, Card, CardMedia, CardContent, Typography, Grid
+  withStyles,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Grid
 } from '@material-ui/core';
 
 import * as actions from '../actions';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   media: {
     paddingBottom: 'calc(100% - 72px)'
   },
   content: {
     paddingBottom: '16px !important',
-    textAlign: 'center',
+    textAlign: 'center'
   }
 });
 
@@ -29,7 +34,10 @@ class BuildingList extends Component {
 
     return buildings.map(building => (
       <Grid item xs={6} sm={3} key={building.buildingCode}>
-        <NavLink to={`/search/${building.buildingCode}`} style={{ textDecoration: 'none' }}>
+        <NavLink
+          to={`/search/${building.buildingCode}`}
+          style={{ textDecoration: 'none' }}
+        >
           <Card>
             <CardMedia
               className={classes.media}
@@ -64,6 +72,9 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-  connect(mapStateToProps, actions),
+  connect(
+    mapStateToProps,
+    actions
+  ),
   withStyles(styles)
 )(BuildingList);
