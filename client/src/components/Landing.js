@@ -6,7 +6,7 @@ import { School } from '@material-ui/icons';
 
 const styles = theme => ({
   root: {
-    flex: '1 0 100%',
+    flex: '1 0 100%'
   },
   hero: {
     minHeight: '80vh',
@@ -15,45 +15,48 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.palette.background.paper,
-    color: theme.palette.type === 'light' ? theme.palette.primary.dark : theme.palette.primary.main,
+    color:
+      theme.palette.type === 'light'
+        ? theme.palette.primary.dark
+        : theme.palette.primary.main
   },
   text: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   title: {
     letterSpacing: '.7rem',
     textIndent: '.7rem',
     fontWeight: theme.typography.fontWeightLight,
     [theme.breakpoints.only('xs')]: {
-      fontSize: 28,
+      fontSize: 28
     },
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap'
   },
   headline: {
     paddingLeft: theme.spacing.unit * 4,
     paddingRight: theme.spacing.unit * 4,
     marginTop: theme.spacing.unit,
     maxWidth: 500,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   content: {
     paddingBottom: theme.spacing.unit * 8,
     paddingTop: theme.spacing.unit * 8,
     [theme.breakpoints.up('sm')]: {
-      paddingTop: theme.spacing.unit * 12,
-    },
+      paddingTop: theme.spacing.unit * 12
+    }
   },
   chip: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3
   },
   logo: {
     margin: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 4}px`,
     width: '100%',
     height: '35vw',
-    maxHeight: 200,
+    maxHeight: 200
   }
 });
 
@@ -67,19 +70,19 @@ class Landing extends Component {
           <School className={classes.logo} />
           <div className={classes.text}>
             <Typography
-              variant='display2'
-              align='center'
-              component='h1'
-              color='inherit'
+              variant="display2"
+              align="center"
+              component="h1"
+              color="inherit"
               gutterBottom
               className={classes.title}
             >
               {'StudySpot'}
             </Typography>
             <Typography
-              variant='headline'
-              component='h2'
-              color='inherit'
+              variant="headline"
+              component="h2"
+              color="inherit"
               gutterBottom
               className={classes.headline}
             >
@@ -87,9 +90,9 @@ class Landing extends Component {
             </Typography>
             <Chip
               className={classes.chip}
-              variant='outlined'
-              color='primary'
-              label='Select an option from the menu to begin!'
+              variant="outlined"
+              color="primary"
+              label="Select an option from the menu to begin!"
             />
           </div>
         </div>

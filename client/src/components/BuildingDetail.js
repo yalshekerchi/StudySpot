@@ -4,9 +4,20 @@ import { compose } from 'recompose';
 import _ from 'lodash';
 
 import {
-  withStyles, Card, Button, CardContent, Typography, CardActions,
-  ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
-  Grid, List, ListItem, ListItemIcon, ListItemText
+  withStyles,
+  Card,
+  Button,
+  CardContent,
+  Typography,
+  CardActions,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
 } from '@material-ui/core';
 import { ExpandMore, LocalLibrary } from '@material-ui/icons';
 
@@ -22,15 +33,15 @@ const styles = theme => ({
     fontSize: theme.typography.pxToRem(15)
   },
   card: {
-    minWidth: 275,
+    minWidth: 275
   },
   title: {
     marginBottom: 16,
-    fontSize: 14,
+    fontSize: 14
   },
   pos: {
-    marginBottom: 12,
-  },
+    marginBottom: 12
+  }
 });
 
 class BuildingDetail extends Component {
@@ -72,9 +83,7 @@ class BuildingDetail extends Component {
           <Typography className={classes.heading}>Available Rooms</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <List>
-            {this.renderRoomList()}
-          </List>
+          <List>{this.renderRoomList()}</List>
         </ExpansionPanelDetails>
       </ExpansionPanel>
     );
@@ -87,9 +96,7 @@ class BuildingDetail extends Component {
         <ListItemIcon>
           <LocalLibrary />
         </ListItemIcon>
-        <ListItemText
-          primary={`${building.buildingCode} ${room.roomNumber}`}
-        />
+        <ListItemText primary={`${building.buildingCode} ${room.roomNumber}`} />
       </ListItem>
     ));
   }
@@ -110,20 +117,23 @@ class BuildingDetail extends Component {
         </div>
       );
     }
-    return (
-      <div>Loading</div>
-    );
+    return <div>Loading</div>;
   }
 }
 
 function mapStateToProps(state, ownProps) {
-  const building = _.find(state.availableBuildings, { buildingCode: ownProps.match.params.code });
+  const building = _.find(state.availableBuildings, {
+    buildingCode: ownProps.match.params.code
+  });
   return {
     building
   };
 }
 
 export default compose(
-  connect(mapStateToProps, actions),
+  connect(
+    mapStateToProps,
+    actions
+  ),
   withStyles(styles)
 )(BuildingDetail);

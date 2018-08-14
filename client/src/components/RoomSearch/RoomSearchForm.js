@@ -2,24 +2,31 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import {
-  reduxForm, Field, Fields, formValueSelector
-} from 'redux-form';
+import { reduxForm, Field, Fields, formValueSelector } from 'redux-form';
 import moment from 'moment';
 import _ from 'lodash';
 
 import {
-  MenuItem, ListItemIcon, Chip, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
-  Typography, FormControl, FormHelperText, Grid, Button
+  MenuItem,
+  ListItemText,
+  Checkbox,
+  Chip,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
+  FormControl,
+  FormHelperText,
+  Grid,
+  Button
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Select } from 'redux-form-material-ui';
-import { ExpandMore, DomainRounded } from '@material-ui/icons';
+import { ExpandMore, Search } from '@material-ui/icons';
 import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
 
 import * as actions from '../../actions';
 import formFields from './formFields';
-
 
 const styles = theme => ({
   root: {
@@ -29,18 +36,18 @@ const styles = theme => ({
     marginRight: 'auto'
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(15)
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.secondary
   },
   chips: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexWrap: 'wrap'
   },
   chip: {
-    margin: theme.spacing.unit / 4,
+    margin: theme.spacing.unit / 4
   },
   buildingSelector: {
     width: '100%',
@@ -51,7 +58,7 @@ const styles = theme => ({
     boxSizing: 'content-box'
   },
   panelDetail: {
-    paddingRight: '32px',
+    paddingRight: '32px'
   },
   gridCenter: {
     display: 'flex',
@@ -61,6 +68,9 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     margin: theme.spacing.unit * 3
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit
   }
 });
 
@@ -69,7 +79,7 @@ class RoomSelectForm extends Component {
     super(props);
 
     this.state = {
-      expanded: [],
+      expanded: []
     };
 
     this.renderChips = this.renderChips.bind(this);
@@ -93,46 +103,56 @@ class RoomSelectForm extends Component {
   }
 
   renderMenuItems() {
-    return this.props.buildings.map((item) => {
-      return (
-        <MenuItem value={item.buildingCode} key={item.buildingCode}>
-          <ListItemIcon>
-            <DomainRounded />
-          </ListItemIcon>
-          {item.buildingCode}
-        </MenuItem>
-      );
-    });
+    const { buildings, selectedBuildings } = this.props;
+
+    return buildings.map(item => (
+      <MenuItem value={item.buildingCode} key={item.buildingCode}>
+        <Checkbox
+          checked={
+            !!(
+              selectedBuildings && selectedBuildings.includes(item.buildingCode)
+            )
+          }
+        />
+        <ListItemText primary={item.buildingCode} />
+      </MenuItem>
+    ));
   }
 
-  renderValidationMessage = fieldName => (fields) => {
-    const { meta: { error, touched } } = fields[fieldName];
+  renderValidationMessage = fieldName => fields => {
+    const {
+      meta: { error, touched }
+    } = fields[fieldName];
     if (error && touched) {
-      return (
-        <FormHelperText error>{error}</FormHelperText>
-      );
+      return <FormHelperText error>{error}</FormHelperText>;
     }
     return null;
-  }
+  };
 
   renderDateFormatInput(field) {
-    const { input, meta: { error, touched } } = field;
+    const {
+      input,
+      meta: { error, touched }
+    } = field;
     const { classes } = this.props;
     return (
       <DateFormatInput
         onChange={input.onChange}
         value={!input.value ? null : new Date(input.value)}
-        dateFormat='MM/dd/yyyy'
+        dateFormat="MM/dd/yyyy"
         okToConfirm={true}
         dialog={true}
         className={classes.dateTimeSelector}
-        error={(touched && error) ? error : undefined}
+        error={touched && error ? error : undefined}
       />
     );
   }
 
   renderTimeFormatInput(field) {
-    const { input, meta: { error, touched } } = field;
+    const {
+      input,
+      meta: { error, touched }
+    } = field;
     const { classes } = this.props;
     return (
       <TimeFormatInput
@@ -141,24 +161,37 @@ class RoomSelectForm extends Component {
         okToConfirm={true}
         dialog={true}
         className={classes.dateTimeSelector}
-        error={(touched && error) ? error : undefined}
+        error={touched && error ? error : undefined}
       />
     );
   }
 
   handlePanelChange = panel => (event, expanded) => {
     this.setState({ expanded: expanded ? panel : [] });
-  }
+  };
 
   render() {
     const {
-      classes, selectedBuildings, selectedDate, selectedStartTime, selectedEndTime, handleSubmit, history
+      classes,
+      selectedBuildings,
+      selectedDate,
+      selectedStartTime,
+      selectedEndTime,
+      handleSubmit,
+      history
     } = this.props;
     const { expanded } = this.state;
     return (
       <div className={classes.root}>
-        <form onSubmit={handleSubmit(values => this.props.fetchAvailableBuildings(values, history))}>
-          <ExpansionPanel expanded={expanded.includes('locationPanel')} onChange={this.handlePanelChange(['locationPanel'])}>
+        <form
+          onSubmit={handleSubmit(values =>
+            this.props.fetchAvailableBuildings(values, history)
+          )}
+        >
+          <ExpansionPanel
+            expanded={expanded.includes('locationPanel')}
+            onChange={this.handlePanelChange(['locationPanel'])}
+          >
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Grid container spacing={24}>
                 <Grid item xs={4} className={classes.gridItem}>
@@ -166,7 +199,9 @@ class RoomSelectForm extends Component {
                 </Grid>
                 <Grid item xs={8} className={classes.gridItem}>
                   <Typography className={classes.secondaryHeading}>
-                    {(selectedBuildings && selectedBuildings.length > 0) ? `${selectedBuildings.length} Building(s) Selected` : 'Select Buildings'}
+                    {selectedBuildings && selectedBuildings.length > 0
+                      ? `${selectedBuildings.length} Building(s) Selected`
+                      : 'Select Buildings'}
                   </Typography>
                 </Grid>
               </Grid>
@@ -177,21 +212,32 @@ class RoomSelectForm extends Component {
                 <Grid item xs={8}>
                   <FormControl className={classes.buildingSelector}>
                     <Field
-                      name='buildings'
+                      name="buildings"
                       component={Select}
                       renderValue={this.renderChips}
                       format={value => value || []}
                       multiple
+                      MenuProps={{
+                        style: {
+                          maxHeight: '500px'
+                        }
+                      }}
                     >
-                      {this.renderMenuItems()}
+                      {this.renderMenuItems(selectedBuildings)}
                     </Field>
-                    <Fields names={Object.keys(formFields)} component={this.renderValidationMessage(['buildings'])}/>
+                    <Fields
+                      names={Object.keys(formFields)}
+                      component={this.renderValidationMessage(['buildings'])}
+                    />
                   </FormControl>
                 </Grid>
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-          <ExpansionPanel expanded={expanded.includes('datePanel')} onChange={this.handlePanelChange(['datePanel'])}>
+          <ExpansionPanel
+            expanded={expanded.includes('datePanel')}
+            onChange={this.handlePanelChange(['datePanel'])}
+          >
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Grid container spacing={24}>
                 <Grid item xs={4}>
@@ -199,7 +245,9 @@ class RoomSelectForm extends Component {
                 </Grid>
                 <Grid item xs={8}>
                   <Typography className={classes.secondaryHeading}>
-                    {selectedDate ? moment(selectedDate).format('dddd, MMMM d, YYYY') : 'Select Date'}
+                    {selectedDate
+                      ? moment(selectedDate).format('dddd, MMMM d, YYYY')
+                      : 'Select Date'}
                   </Typography>
                 </Grid>
               </Grid>
@@ -208,15 +256,15 @@ class RoomSelectForm extends Component {
               <Grid container spacing={24} className={classes.panelDetail}>
                 <Grid item xs={4} />
                 <Grid item xs={8}>
-                  <Field
-                    name='date'
-                    component={this.renderDateFormatInput}
-                  />
+                  <Field name="date" component={this.renderDateFormatInput} />
                 </Grid>
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-          <ExpansionPanel expanded={expanded.includes('timePanel')} onChange={this.handlePanelChange(['timePanel'])}>
+          <ExpansionPanel
+            expanded={expanded.includes('timePanel')}
+            onChange={this.handlePanelChange(['timePanel'])}
+          >
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Grid container spacing={24}>
                 <Grid item xs={4}>
@@ -225,42 +273,56 @@ class RoomSelectForm extends Component {
                 <Grid item xs={8}>
                   <Typography className={classes.secondaryHeading}>
                     {selectedStartTime && selectedEndTime
-                      ? `${moment(selectedStartTime).format('h:mm A')} - ${moment(selectedEndTime).format('h:mm A')}` : 'Select Start and End Time'}
+                      ? `${moment(selectedStartTime).format(
+                          'h:mm A'
+                        )} - ${moment(selectedEndTime).format('h:mm A')}`
+                      : 'Select Start and End Time'}
                   </Typography>
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.details}>
               <Grid container spacing={24} className={classes.panelDetail}>
-                  <Grid item xs={4} className={classes.gridCenter}>
-                    <Typography className={classes.secondaryHeading}>Start Time</Typography>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Field
-                      name='startTime'
-                      component={this.renderTimeFormatInput}
-                    />
-                  </Grid>
-                  <Grid item xs={4} className={classes.gridCenter}>
-                    <Typography className={classes.secondaryHeading}>End Time</Typography>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Field
-                      name='endTime'
-                      component={this.renderTimeFormatInput}
-                    />
-                  </Grid>
+                <Grid item xs={4} className={classes.gridCenter}>
+                  <Typography className={classes.secondaryHeading}>
+                    Start Time
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Field
+                    name="startTime"
+                    component={this.renderTimeFormatInput}
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.gridCenter}>
+                  <Typography className={classes.secondaryHeading}>
+                    End Time
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Field
+                    name="endTime"
+                    component={this.renderTimeFormatInput}
+                  />
+                </Grid>
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <div className={classes.button}>
             <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-              onClick={() => { this.handlePanelChange(['locationPanel', 'datePanel', 'timePanel'])(null, true); }}
+              variant="extendedFab"
+              color="primary"
+              type="submit"
+              onClick={() => {
+                this.handlePanelChange([
+                  'locationPanel',
+                  'datePanel',
+                  'timePanel'
+                ])(null, true);
+              }}
             >
-              Continue
+              <Search className={classes.extendedIcon} />
+              Search
             </Button>
           </div>
         </form>
@@ -298,7 +360,10 @@ function mapStateToProps(state) {
 
 export default compose(
   reduxForm({ form: 'searchForm', validate }),
-  connect(mapStateToProps, actions),
+  connect(
+    mapStateToProps,
+    actions
+  ),
   withStyles(styles),
   withRouter
 )(RoomSelectForm);

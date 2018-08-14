@@ -23,7 +23,6 @@ app.use(bodyParser.json());
 require('./routes/scrapeRoutes')(app);
 require('./routes/apiRoutes')(app);
 
-
 if (process.env.NODE_ENV === 'production') {
   // Serve producution assets, ie. main.js, main.css
   app.use(express.static('client/build'));
