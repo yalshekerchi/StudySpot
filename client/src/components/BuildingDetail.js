@@ -19,6 +19,7 @@ import {
   ListItemIcon,
   ListItemText
 } from '@material-ui/core';
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import { ExpandMore, Event } from '@material-ui/icons';
 
 import * as actions from '../actions';
@@ -47,6 +48,10 @@ const styles = theme => ({
   },
   icon: {
     marginRight: 0
+  },
+  map: {
+    height: '75vh',
+    width: '100%'
   }
 });
 
@@ -92,6 +97,71 @@ class BuildingDetail extends Component {
           <Button size="small">Available Rooms: {building.rooms.length}</Button>
         </CardActions>
       </Card>
+    );
+  }
+
+  calculateMapStyles() {
+    const { width } = this.props;
+    switch (width) {
+      case 'xs':
+        return {
+          border: 0,
+          marginTop: '-65px',
+          height: 'calc(75vh + 65px)'
+        };
+      case 'sm':
+        return {
+          border: 0,
+          marginTop: '-70px',
+          height: 'calc(75vh + 70px)'
+        };
+      case 'md':
+        return {
+          border: 0,
+          marginTop: '-70px',
+          height: 'calc(75vh + 70px)'
+        };
+      case 'lg':
+        return {
+          border: 0,
+          marginTop: '-100px',
+          height: 'calc(75vh + 100px)'
+        };
+      case 'xl':
+        return {
+          border: 0,
+          marginTop: '-100px',
+          height: 'calc(75vh + 100px)'
+        };
+      default:
+        return {
+          border: 0,
+          marginTop: '-70px',
+          height: 'calc(75vh + 70px)'
+        };
+    }
+  }
+
+  renderMapPanel(building) {
+    const { classes } = this.props;
+
+    return (
+      <ExpansionPanel>
+        <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+          <Typography className={classes.heading}>Map</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <div className={classes.map}>
+            <iframe
+              src={`https://uwaterloo.ca/map/${building.buildingCode}`}
+              title="map"
+              width="100%"
+              id="mapiframe"
+              style={this.calculateMapStyles()}
+            />
+          </div>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
     );
   }
 
@@ -154,6 +224,9 @@ class BuildingDetail extends Component {
               {this.renderBuildingInfoPanel(building)}
             </Grid>
             <Grid item xs={12}>
+              {this.renderMapPanel(building)}
+            </Grid>
+            <Grid item xs={12}>
               {this.renderAvailableRoomsPanel(building, pathname)}
             </Grid>
           </Grid>
@@ -182,5 +255,6 @@ export default compose(
     mapStateToProps,
     actions
   ),
-  withStyles(styles)
+  withStyles(styles),
+  withWidth()
 )(BuildingDetail);
