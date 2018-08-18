@@ -59,7 +59,7 @@ const styles = theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: `calc(100% - 240px)`,
       marginLeft: 240
     }
@@ -84,15 +84,15 @@ const menuItems = [
   {
     label: 'Room Explorer',
     route: '/room-explorer',
-    disabled: true,
+    disabled: false,
     icon: <LocalLibrary />
-  },
-  {
-    label: 'Course Explorer',
-    route: '/course-explorer',
-    disabled: true,
-    icon: <Class />
   }
+  // {
+  //   label: 'Course Explorer',
+  //   route: '/course-explorer',
+  //   disabled: true,
+  //   icon: <Class />
+  // }
 ];
 
 class Layout extends Component {

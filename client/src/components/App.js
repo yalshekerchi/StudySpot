@@ -7,6 +7,7 @@ import Landing from './Landing';
 import RoomSearchForm from './RoomSearch/RoomSearchForm';
 import BuildingList from './BuildingList';
 import BuildingDetail from './BuildingDetail';
+import RoomDetail from './RoomDetail';
 
 class App extends Component {
   render() {
@@ -16,9 +17,31 @@ class App extends Component {
           <Layout>
             <Route exact={true} path="/" component={Landing} />
             <Route exact={true} path="/search" component={RoomSearchForm} />
+            <Route
+              exact={true}
+              path="/room-explorer"
+              component={BuildingList}
+            />
             <Switch>
+              <Route
+                path="/room-explorer/:buildingCode/:roomNumber"
+                component={RoomDetail}
+              />
+              <Route
+                path="/room-explorer/:buildingCode"
+                component={BuildingDetail}
+              />
+            </Switch>
+            <Switch>
+              <Route
+                path="/search/results/:buildingCode/:roomNumber"
+                component={RoomDetail}
+              />
+              <Route
+                path="/search/results/:buildingCode"
+                component={BuildingDetail}
+              />
               <Route path="/search/results" component={BuildingList} />
-              <Route path="/search/:code" component={BuildingDetail} />
             </Switch>
           </Layout>
         </BrowserRouter>

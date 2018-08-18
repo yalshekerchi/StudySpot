@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import GeoPattern from 'geopattern';
 
 import {
@@ -29,13 +29,22 @@ const styles = theme => ({
 });
 
 class BuildingList extends Component {
+  componentDidMount() {
+    if (this.props.location.pathname.startsWith('/room-explorer')) {
+      this.props.fetchBuildings();
+    }
+  }
+
   renderBuildingItems(buildings) {
-    const { classes } = this.props;
+    const {
+      classes,
+      location: { pathname }
+    } = this.props;
 
     return buildings.map(building => (
       <Grid item xs={6} sm={3} key={building.buildingCode}>
         <NavLink
-          to={`/search/${building.buildingCode}`}
+          to={`${pathname}/${building.buildingCode}`}
           style={{ textDecoration: 'none' }}
         >
           <Card>
@@ -58,10 +67,19 @@ class BuildingList extends Component {
   }
 
   render() {
+    const {
+      allBuildings,
+      availableBuildings,
+      location: { pathname }
+    } = this.props;
+
+    const buildings = pathname.startsWith('/search')
+      ? availableBuildings
+      : allBuildings;
     return (
       <div>
         <Grid container spacing={24}>
-          {this.renderBuildingItems(this.props.availableBuildings)}
+          {this.renderBuildingItems(buildings)}
         </Grid>
       </div>
     );
@@ -70,6 +88,7 @@ class BuildingList extends Component {
 
 function mapStateToProps(state) {
   return {
+    allBuildings: state.buildings,
     availableBuildings: state.availableBuildings
   };
 }
@@ -79,5 +98,6 @@ export default compose(
     mapStateToProps,
     actions
   ),
-  withStyles(styles)
+  withStyles(styles),
+  withRouter
 )(BuildingList);
