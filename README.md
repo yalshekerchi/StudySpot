@@ -2,9 +2,9 @@
 
 StudySpot provides quick, simple access to classroom information.
 
-It allows you to find available classrooms which you can use for studying or group work as well as explore the schedule of any classroom on Univerity of Waterloo's campus. Simply provide the building(s), date, and time you would like to find available rooms at and StudySpot will provide you with rooms which have no classes scheduled. 
+It allows you to find available classrooms which you can use for studying or group work as well as explore the schedule of any classroom on University of Waterloo's campus. Simply provide the building(s), date, and time you would like to find available rooms at and StudySpot will provide you with rooms which have no classes scheduled. 
 
-StudySpot also offers a general Room Explorer feature which shows you all buildings on campus and allows you to view the schedule of any classrooms. StudySpot also provides an embedded version of the [Univerity of Waterloo Campus Map](https://uwaterloo.ca/map/) which allows users to easily locate the building locations and classroom locations (if connected to a UW network).
+StudySpot also offers a general Room Explorer feature which shows you all buildings on campus and allows you to view the schedule of any classrooms. StudySpot also provides an embedded version of the [University of Waterloo Campus Map](https://uwaterloo.ca/map/) which allows users to easily locate the building locations and classroom locations (if connected to a UW network).
 
 The classroom schedule information is obtained from the [University of Waterloo Open Data API](https://uwaterloo.ca/api/) and scraped into a MongoDB database. The database allows for efficient and more aggregated querying of schedule information as opposed using the UW API directly.
 
@@ -53,7 +53,7 @@ To get the frontend and backend run locally:
 - `cd ..` to return back to the root directory
 - `npm run dev` to start the local server
 
-The front-end will run on port 3000 to prevent conflicts with the some backend Express server which runs on port 5000 (or the value of the PORT environment variable).
+The front-end will run on port 3000 to prevent conflicts with the backend Express server which runs on port 5000 (customizable using the PORT environment variable).
 
 ## Accessing the database API
 The application provides an API in order to easily access some of the information stored on the database. The following endpoints are currently implemented: 
