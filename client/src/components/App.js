@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { MuiPickersUtilsProvider } from 'material-ui-pickers';
-import { MomentUtils } from 'material-ui-pickers/utils/moment-utils';
+import { MuiPickersUtilsProvider } from '../../node_modules/material-ui-pickers';
+import { MomentUtils } from '../../node_modules/material-ui-pickers/utils/moment-utils';
 
 import Layout from './Layout';
 import Landing from './Landing';
