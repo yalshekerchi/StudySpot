@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { MuiPickersUtilsProvider } from '../../node_modules/material-ui-pickers';
-import { MomentUtils } from '../../node_modules/material-ui-pickers/utils/moment-utils';
 
 import Layout from './Layout';
 import Landing from './Landing';
@@ -14,7 +12,7 @@ import RoomDetail from './RoomDetail';
 class App extends Component {
   render() {
     return (
-      <MuiPickersUtilsProvider utils={MomentUtils}>
+      <div>
         <BrowserRouter>
           <Layout>
             <Route exact={true} path="/" component={Landing} />
@@ -47,7 +45,7 @@ class App extends Component {
             </Switch>
           </Layout>
         </BrowserRouter>
-      </MuiPickersUtilsProvider>
+      </div>
     );
   }
 }
