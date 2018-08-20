@@ -20,7 +20,7 @@ import {
   Divider
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { Search, LocalLibrary, Class, School } from '@material-ui/icons';
+import { Search, LocalLibrary, School } from '@material-ui/icons';
 
 const styles = theme => ({
   root: {
@@ -55,7 +55,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 2
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,

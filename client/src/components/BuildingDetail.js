@@ -17,9 +17,9 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  withWidth
 } from '@material-ui/core';
-import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import { ExpandMore, Event } from '@material-ui/icons';
 
 import * as actions from '../actions';

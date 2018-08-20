@@ -18,15 +18,23 @@ import {
   FormControl,
   FormHelperText,
   Grid,
-  Button
+  Button,
+  IconButton,
+  InputAdornment
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Select } from 'redux-form-material-ui';
-import { ExpandMore, Search } from '@material-ui/icons';
-import { DateFormatInput, TimeFormatInput } from 'material-ui-next-pickers';
+import { ExpandMore, Search, AccessTime, Event } from '@material-ui/icons';
+import { DatePicker, TimePicker } from 'material-ui-pickers';
 
 import * as actions from '../../actions';
-import formFields from './formFields';
+
+const formFields = {
+  buildings: 'You must select at least one building',
+  date: 'You must select a date',
+  startTime: 'You must provide a start time',
+  endTime: 'You must provide an end time'
+};
 
 const styles = theme => ({
   root: {
@@ -49,16 +57,12 @@ const styles = theme => ({
   chip: {
     margin: theme.spacing.unit / 4
   },
-  buildingSelector: {
+  selector: {
     width: '100%',
     maxWidth: 236
   },
-  dateTimeSelector: {
-    maxWidth: 236,
-    boxSizing: 'content-box'
-  },
-  panelDetail: {
-    paddingRight: '32px'
+  details: {
+    width: 'calc(100% - 8px)'
   },
   gridCenter: {
     display: 'flex',
@@ -134,16 +138,23 @@ class RoomSelectForm extends Component {
       input,
       meta: { error, touched }
     } = field;
-    const { classes } = this.props;
     return (
-      <DateFormatInput
-        onChange={input.onChange}
+      <DatePicker
+        format="MM/DD/YYYY"
+        showTodayButton
         value={!input.value ? null : new Date(input.value)}
-        dateFormat="MM/dd/yyyy"
-        okToConfirm={true}
-        dialog={true}
-        className={classes.dateTimeSelector}
-        error={touched && error ? error : undefined}
+        onChange={input.onChange}
+        error={error && touched}
+        invalidDateMessage="Invalid Date Format! Use MM/DD/YYYY"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton>
+                <Event />
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
       />
     );
   }
@@ -153,15 +164,23 @@ class RoomSelectForm extends Component {
       input,
       meta: { error, touched }
     } = field;
-    const { classes } = this.props;
     return (
-      <TimeFormatInput
-        onChange={input.onChange}
+      <TimePicker
+        showTodayButton
+        todayLabel="now"
         value={!input.value ? null : new Date(input.value)}
-        okToConfirm={true}
-        dialog={true}
-        className={classes.dateTimeSelector}
-        error={touched && error ? error : undefined}
+        onChange={input.onChange}
+        error={error && touched}
+        invalidDateMessage="Invalid Time Format! Use hh:mm AM/PM"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton>
+                <AccessTime />
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
       />
     );
   }
@@ -207,10 +226,10 @@ class RoomSelectForm extends Component {
               </Grid>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Grid container spacing={24} className={classes.panelDetail}>
+              <Grid container spacing={24} className={classes.details}>
                 <Grid item xs={4} />
                 <Grid item xs={8}>
-                  <FormControl className={classes.buildingSelector}>
+                  <FormControl className={classes.selector}>
                     <Field
                       name="buildings"
                       component={Select}
@@ -246,17 +265,23 @@ class RoomSelectForm extends Component {
                 <Grid item xs={8}>
                   <Typography className={classes.secondaryHeading}>
                     {selectedDate
-                      ? moment(selectedDate).format('dddd, MMMM d, YYYY')
+                      ? moment(selectedDate).format('dddd, MMMM DD, YYYY')
                       : 'Select Date'}
                   </Typography>
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails className={classes.details}>
-              <Grid container spacing={24} className={classes.panelDetail}>
+            <ExpansionPanelDetails>
+              <Grid container spacing={24} className={classes.details}>
                 <Grid item xs={4} />
                 <Grid item xs={8}>
-                  <Field name="date" component={this.renderDateFormatInput} />
+                  <FormControl className={classes.selector}>
+                    <Field name="date" component={this.renderDateFormatInput} />
+                    <Fields
+                      names={Object.keys(formFields)}
+                      component={this.renderValidationMessage(['date'])}
+                    />
+                  </FormControl>
                 </Grid>
               </Grid>
             </ExpansionPanelDetails>
@@ -281,18 +306,24 @@ class RoomSelectForm extends Component {
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails className={classes.details}>
-              <Grid container spacing={24} className={classes.panelDetail}>
+            <ExpansionPanelDetails>
+              <Grid container spacing={24} className={classes.details}>
                 <Grid item xs={4} className={classes.gridCenter}>
                   <Typography className={classes.secondaryHeading}>
                     Start Time
                   </Typography>
                 </Grid>
                 <Grid item xs={8}>
-                  <Field
-                    name="startTime"
-                    component={this.renderTimeFormatInput}
-                  />
+                  <FormControl className={classes.selector}>
+                    <Field
+                      name="startTime"
+                      component={this.renderTimeFormatInput}
+                    />
+                    <Fields
+                      names={Object.keys(formFields)}
+                      component={this.renderValidationMessage(['startTime'])}
+                    />
+                  </FormControl>
                 </Grid>
                 <Grid item xs={4} className={classes.gridCenter}>
                   <Typography className={classes.secondaryHeading}>
@@ -300,10 +331,16 @@ class RoomSelectForm extends Component {
                   </Typography>
                 </Grid>
                 <Grid item xs={8}>
-                  <Field
-                    name="endTime"
-                    component={this.renderTimeFormatInput}
-                  />
+                  <FormControl className={classes.selector}>
+                    <Field
+                      name="endTime"
+                      component={this.renderTimeFormatInput}
+                    />
+                    <Fields
+                      names={Object.keys(formFields)}
+                      component={this.renderValidationMessage(['endTime'])}
+                    />
+                  </FormControl>
                 </Grid>
               </Grid>
             </ExpansionPanelDetails>
