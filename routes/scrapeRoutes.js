@@ -9,7 +9,7 @@ const Section = mongoose.model('Section');
 const ClassSlot = mongoose.model('ClassSlot');
 
 const UWATERLOO_URL = 'https://api.uwaterloo.ca/v2';
-const term = '1189';
+const term = '1195';
 
 module.exports = app => {
   app.get('/scrape', async (req, res) => {
