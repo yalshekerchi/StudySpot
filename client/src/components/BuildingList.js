@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { NavLink, withRouter } from 'react-router-dom';
-import GeoPattern from 'geopattern';
+import GeoPattern from '@dougmorin0/geopattern';
 
 import {
   withStyles,

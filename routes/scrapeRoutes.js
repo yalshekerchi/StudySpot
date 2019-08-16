@@ -9,7 +9,7 @@ const Section = mongoose.model('Section');
 const ClassSlot = mongoose.model('ClassSlot');
 
 const UWATERLOO_URL = 'https://api.uwaterloo.ca/v2';
-const term = '1195';
+const term = '1199';
 
 module.exports = app => {
   app.get('/scrape', async (req, res) => {
@@ -20,9 +20,7 @@ module.exports = app => {
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     for (const subjectData of subjectsReq.data.data) {
       const schedulesReq = await axios.get(
-        `${UWATERLOO_URL}/terms/${term}/${
-          subjectData.subject
-        }/schedule.json?key=${keys.uWaterlooAPI}`
+        `${UWATERLOO_URL}/terms/${term}/${subjectData.subject}/schedule.json?key=${keys.uWaterlooAPI}`
       );
       console.log('Requested Schedule for', subjectData.subject);
 
