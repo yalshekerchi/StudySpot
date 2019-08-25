@@ -9,7 +9,12 @@ const Section = mongoose.model('Section');
 const ClassSlot = mongoose.model('ClassSlot');
 
 const UWATERLOO_URL = 'https://api.uwaterloo.ca/v2';
-const term = '1199';
+
+// Calculate current term code
+const currentMonth = moment().month(); // Zero-indexed
+const termStartMonth = 1 + Math.floor(currentMonth / 4) * 4;
+const termStartYear = moment().year() % 100;
+const term = `1${termStartYear}${termStartMonth}`;
 
 module.exports = app => {
   app.get('/scrape', async (req, res) => {
