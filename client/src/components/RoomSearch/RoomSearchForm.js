@@ -23,7 +23,7 @@ import {
   InputAdornment
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { Select } from 'redux-form-material-ui';
+import { Select } from '@blackbricksoftware/redux-form-material-ui';
 import { ExpandMore, Search, AccessTime, Event } from '@material-ui/icons';
 import { DatePicker, TimePicker } from 'material-ui-pickers';
 
