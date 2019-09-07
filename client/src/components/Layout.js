@@ -25,7 +25,7 @@ import { Search, LocalLibrary, School } from '@material-ui/icons';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: '100%',
+    minHeight: '100%',
     zIndex: 1,
     position: 'relative',
     display: 'flex',
@@ -55,9 +55,15 @@ const styles = theme => ({
     marginRight: 'auto'
   },
   content: {
+    display: 'flex',
+    flexDirection: 'column',
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 2,
+    marginTop: '64px',
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: '64px'
+    }
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -189,11 +195,7 @@ class Layout extends Component {
               </MenuList>
             </Drawer>
           </Hidden>
-          <main className={classes.content}>
-            <div className={classes.toolbar} />
-            {children}
-            <div className={classes.toolbar} />
-          </main>
+          <main className={classes.content}>{children}</main>
           <Hidden mdUp>
             <BottomNavigation
               value={pathIndex}

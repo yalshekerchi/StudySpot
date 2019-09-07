@@ -8,12 +8,12 @@ const styles = theme => ({
   root: {
     flex: '1 0 100%'
   },
-  hero: {
-    minHeight: '80vh',
-    flex: '0 0 auto',
+  container: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'column',
+    flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     color:
       theme.palette.type === 'light'
@@ -42,13 +42,6 @@ const styles = theme => ({
     maxWidth: 500,
     textAlign: 'center'
   },
-  content: {
-    paddingBottom: theme.spacing.unit * 8,
-    paddingTop: theme.spacing.unit * 8,
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: theme.spacing.unit * 12
-    }
-  },
   chip: {
     marginTop: theme.spacing.unit * 3
   },
@@ -65,36 +58,34 @@ class Landing extends Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.hero}>
-        <div className={classes.content}>
-          <School className={classes.logo} />
-          <div className={classes.text}>
-            <Typography
-              variant="display2"
-              align="center"
-              component="h1"
-              color="inherit"
-              gutterBottom
-              className={classes.title}
-            >
-              {'StudySpot'}
-            </Typography>
-            <Typography
-              variant="headline"
-              component="h2"
-              color="inherit"
-              gutterBottom
-              className={classes.headline}
-            >
-              {'Quick, simple access to classroom information.'}
-            </Typography>
-            <Chip
-              className={classes.chip}
-              variant="outlined"
-              color="primary"
-              label="Select an option from the menu to begin!"
-            />
-          </div>
+      <div className={classes.container}>
+        <School className={classes.logo} />
+        <div className={classes.text}>
+          <Typography
+            variant="display2"
+            align="center"
+            component="h1"
+            color="inherit"
+            gutterBottom
+            className={classes.title}
+          >
+            {'StudySpot'}
+          </Typography>
+          <Typography
+            variant="headline"
+            component="h2"
+            color="inherit"
+            gutterBottom
+            className={classes.headline}
+          >
+            {'Quick, simple access to classroom information.'}
+          </Typography>
+          <Chip
+            className={classes.chip}
+            variant="outlined"
+            color="primary"
+            label="Select an option from the menu to begin!"
+          />
         </div>
       </div>
     );

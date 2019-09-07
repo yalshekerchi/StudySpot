@@ -2,6 +2,10 @@ html {
   box-sizing: content-box !important;
 }
 
+html, body, #root {
+  height: 100%;
+}
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
