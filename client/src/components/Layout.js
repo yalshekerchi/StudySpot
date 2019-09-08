@@ -27,7 +27,6 @@ const styles = theme => ({
     flexGrow: 1,
     height: '100%',
     zIndex: 1,
-    overflow: 'hidden',
     position: 'relative',
     display: 'flex',
     width: '100%'
@@ -40,9 +39,12 @@ const styles = theme => ({
     whiteSpace: 'nowrap',
     textDecoration: 'none'
   },
-  drawerPaper: {
+  drawer: {
     width: 240,
-    position: 'relative'
+    flexShrink: 0
+  },
+  drawerPaper: {
+    width: 240
   },
   toolbar: {
     ...theme.mixins.toolbar
@@ -175,6 +177,7 @@ class Layout extends Component {
           <Hidden smDown implementation="css">
             <Drawer
               variant="permanent"
+              className={classes.drawer}
               classes={{
                 paper: classes.drawerPaper
               }}
