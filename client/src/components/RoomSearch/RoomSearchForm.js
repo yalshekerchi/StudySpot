@@ -38,10 +38,7 @@ const formFields = {
 
 const styles = theme => ({
   root: {
-    maxWidth: 1000,
-    boxSizing: 'content-box',
-    marginLeft: 'auto',
-    marginRight: 'auto'
+    boxSizing: 'content-box'
   },
   heading: {
     fontSize: theme.typography.pxToRem(15)
@@ -117,6 +114,7 @@ class RoomSelectForm extends Component {
               selectedBuildings && selectedBuildings.includes(item.buildingCode)
             )
           }
+          color="primary"
         />
         <ListItemText primary={item.buildingCode} />
       </MenuItem>

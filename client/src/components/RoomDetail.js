@@ -26,8 +26,10 @@ import * as actions from '../actions';
 
 const styles = theme => ({
   root: {
-    maxWidth: 'calc(100vw - 48px)',
+    // Quick-fix: Find way to bound width
+    width: 'calc(100vw - 32px - 16px)',
     [theme.breakpoints.up('md')]: {
+      width: 'calc(100vw - 240px - 32px - 16px)',
       maxWidth: 1000
     },
     marginLeft: 'auto',
@@ -123,19 +125,19 @@ class RoomDetail extends Component {
   }
 
   renderRoomSchedulePanel() {
-    const { classes, width } = this.props;
+    const { width } = this.props;
     const { value } = this.state;
 
     return (
-      <Paper className={classes.tabRoot}>
+      <Paper>
         <Tabs
           value={value}
           onChange={this.handleChange}
           indicatorColor="primary"
           textColor="primary"
-          centered={isWidthUp('md', width)}
-          scrollable={!isWidthUp('md', width)}
-          scrollButtons="auto"
+          scrollButtons="on"
+          centered={isWidthUp('lg', width)}
+          variant={!isWidthUp('lg', width) ? 'scrollable' : 'fullWidth'}
         >
           {this.renderTabs()}
         </Tabs>

@@ -57,6 +57,7 @@ const styles = theme => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 2,
@@ -64,6 +65,13 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       marginBottom: '64px'
     }
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    maxWidth: '1000px',
+    width: '100%'
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -195,7 +203,9 @@ class Layout extends Component {
               </MenuList>
             </Drawer>
           </Hidden>
-          <main className={classes.content}>{children}</main>
+          <main className={classes.content}>
+            <div className={classes.container}>{children}</div>
+          </main>
           <Hidden mdUp>
             <BottomNavigation
               value={pathIndex}

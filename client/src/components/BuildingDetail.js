@@ -25,11 +25,6 @@ import { ExpandMore, Event } from '@material-ui/icons';
 import * as actions from '../actions';
 
 const styles = theme => ({
-  root: {
-    maxWidth: 1000,
-    marginLeft: 'auto',
-    marginRight: 'auto'
-  },
   heading: {
     fontSize: theme.typography.pxToRem(15)
   },
@@ -50,6 +45,7 @@ const styles = theme => ({
     marginRight: 0
   },
   map: {
+    overflow: 'hidden',
     height: '75vh',
     width: '100%'
   }
@@ -188,20 +184,24 @@ class BuildingDetail extends Component {
       history
     } = this.props;
 
-    return building.rooms.map(room => (
-      <ListItem
-        button
-        key={room.roomNumber}
-        onClick={() =>
-          fetchRoom(building.buildingCode, room.roomNumber, pathname, history)
-        }
-      >
-        <ListItemText primary={`${building.buildingCode} ${room.roomNumber}`} />
-        <ListItemIcon className={classes.icon}>
-          <Event />
-        </ListItemIcon>
-      </ListItem>
-    ));
+    return building.rooms
+      .sort((roomA, roomB) => roomA.roomNumber > roomB.roomNumber)
+      .map(room => (
+        <ListItem
+          button
+          key={room.roomNumber}
+          onClick={() =>
+            fetchRoom(building.buildingCode, room.roomNumber, pathname, history)
+          }
+        >
+          <ListItemText
+            primary={`${building.buildingCode} ${room.roomNumber}`}
+          />
+          <ListItemIcon className={classes.icon}>
+            <Event />
+          </ListItemIcon>
+        </ListItem>
+      ));
   }
 
   render() {
@@ -218,7 +218,7 @@ class BuildingDetail extends Component {
 
     if (building) {
       return (
-        <div className={classes.root}>
+        <div>
           <Grid container direction="column" justify="center" spacing={24}>
             <Grid item xs={12}>
               {this.renderBuildingInfoPanel(building)}
