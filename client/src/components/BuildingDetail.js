@@ -208,8 +208,7 @@ class BuildingDetail extends Component {
     const {
       completeBuilding,
       availableBuilding,
-      location: { pathname },
-      classes
+      location: { pathname }
     } = this.props;
 
     const building = pathname.startsWith('/search')

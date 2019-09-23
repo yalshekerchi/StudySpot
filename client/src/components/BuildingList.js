@@ -10,8 +10,11 @@ import {
   CardMedia,
   CardContent,
   Typography,
-  Grid
+  Grid,
+  InputBase,
+  Paper
 } from '@material-ui/core';
+import { FilterList } from '@material-ui/icons';
 
 import * as actions from '../actions';
 
@@ -25,10 +28,43 @@ const styles = theme => ({
   content: {
     paddingBottom: '16px !important',
     textAlign: 'center'
+  },
+  filter: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    width: '100%',
+    marginBottom: '24px'
+  },
+  filterIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  input: {
+    paddingTop: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 10,
+    width: '100%'
   }
 });
 
 class BuildingList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      filterTerm: ''
+    };
+  }
+
+  handleInputChange(filterTerm) {
+    this.setState({ filterTerm });
+  }
+
   componentDidMount() {
     if (this.props.location.pathname.startsWith('/room-explorer')) {
       this.props.fetchBuildings();
@@ -70,16 +106,41 @@ class BuildingList extends Component {
     const {
       allBuildings,
       availableBuildings,
-      location: { pathname }
+      location: { pathname },
+      classes
     } = this.props;
 
     const buildings = pathname.startsWith('/search')
       ? availableBuildings
       : allBuildings;
+
+    const filterBuildings = buildings.filter(({ buildingCode }) => {
+      return buildingCode
+        .toLowerCase()
+        .includes(this.state.filterTerm.toLowerCase());
+    });
+
     return (
       <div>
+        <Paper>
+          <div className={classes.filter}>
+            <div className={classes.filterIcon}>
+              <FilterList />
+            </div>
+            <InputBase
+              autoFocus
+              onChange={event => {
+                this.handleInputChange(event.target.value);
+              }}
+              placeholder="Filter Buildings…"
+              classes={{
+                input: classes.input
+              }}
+            />
+          </div>
+        </Paper>
         <Grid container spacing={24}>
-          {this.renderBuildingItems(buildings)}
+          {this.renderBuildingItems(filterBuildings)}
         </Grid>
       </div>
     );

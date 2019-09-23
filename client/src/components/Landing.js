@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { compose } from 'recompose';
 
 import { Typography, Chip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { School } from '@material-ui/icons';
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 const styles = theme => ({
   root: {
@@ -43,7 +45,7 @@ const styles = theme => ({
     textAlign: 'center'
   },
   chip: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: '60px'
   },
   logo: {
     margin: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 4}px`,
@@ -55,7 +57,8 @@ const styles = theme => ({
 
 class Landing extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, width } = this.props;
+    const menuLocation = isWidthUp('md', width) ? 'on the left' : 'below';
 
     return (
       <div className={classes.container}>
@@ -82,9 +85,7 @@ class Landing extends Component {
           </Typography>
           <Chip
             className={classes.chip}
-            variant="outlined"
-            color="primary"
-            label="Select an option from the menu to begin!"
+            label={`Select an option from the menu ${menuLocation} to begin!`}
           />
         </div>
       </div>
@@ -92,4 +93,7 @@ class Landing extends Component {
   }
 }
 
-export default withStyles(styles)(Landing);
+export default compose(
+  withStyles(styles),
+  withWidth()
+)(Landing);
