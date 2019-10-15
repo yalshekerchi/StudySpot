@@ -128,7 +128,6 @@ class BuildingList extends Component {
               <FilterList />
             </div>
             <InputBase
-              autoFocus
               onChange={event => {
                 this.handleInputChange(event.target.value);
               }}

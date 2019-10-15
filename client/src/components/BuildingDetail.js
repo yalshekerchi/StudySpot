@@ -210,7 +210,7 @@ class BuildingDetail extends Component {
     } = this.props;
 
     return building.rooms
-      .sort((roomA, roomB) => roomA.roomNumber > roomB.roomNumber)
+      .sort((roomA, roomB) => roomA.roomNumber - roomB.roomNumber)
       .map(room => (
         <ListItem
           button
