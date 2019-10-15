@@ -25,9 +25,8 @@ import { Search, LocalLibrary, School } from '@material-ui/icons';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: '100%',
+    minHeight: '100%',
     zIndex: 1,
-    overflow: 'hidden',
     position: 'relative',
     display: 'flex',
     width: '100%'
@@ -40,9 +39,12 @@ const styles = theme => ({
     whiteSpace: 'nowrap',
     textDecoration: 'none'
   },
-  drawerPaper: {
+  drawer: {
     width: 240,
-    position: 'relative'
+    flexShrink: 0
+  },
+  drawerPaper: {
+    width: 240
   },
   toolbar: {
     ...theme.mixins.toolbar
@@ -53,9 +55,23 @@ const styles = theme => ({
     marginRight: 'auto'
   },
   content: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 2,
+    marginTop: '64px',
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: '64px'
+    }
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    maxWidth: '1000px',
+    width: '100%'
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -175,6 +191,7 @@ class Layout extends Component {
           <Hidden smDown implementation="css">
             <Drawer
               variant="permanent"
+              className={classes.drawer}
               classes={{
                 paper: classes.drawerPaper
               }}
@@ -187,9 +204,7 @@ class Layout extends Component {
             </Drawer>
           </Hidden>
           <main className={classes.content}>
-            <div className={classes.toolbar} />
-            {children}
-            <div className={classes.toolbar} />
+            <div className={classes.container}>{children}</div>
           </main>
           <Hidden mdUp>
             <BottomNavigation

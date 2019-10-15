@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
+import { compose } from 'recompose';
 
 import { Typography, Chip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { School } from '@material-ui/icons';
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 const styles = theme => ({
   root: {
     flex: '1 0 100%'
   },
-  hero: {
-    minHeight: '80vh',
-    flex: '0 0 auto',
+  container: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'column',
+    flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     color:
       theme.palette.type === 'light'
@@ -42,15 +44,8 @@ const styles = theme => ({
     maxWidth: 500,
     textAlign: 'center'
   },
-  content: {
-    paddingBottom: theme.spacing.unit * 8,
-    paddingTop: theme.spacing.unit * 8,
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: theme.spacing.unit * 12
-    }
-  },
   chip: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: '60px'
   },
   logo: {
     margin: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 4}px`,
@@ -62,43 +57,43 @@ const styles = theme => ({
 
 class Landing extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, width } = this.props;
+    const menuLocation = isWidthUp('md', width) ? 'on the left' : 'below';
 
     return (
-      <div className={classes.hero}>
-        <div className={classes.content}>
-          <School className={classes.logo} />
-          <div className={classes.text}>
-            <Typography
-              variant="display2"
-              align="center"
-              component="h1"
-              color="inherit"
-              gutterBottom
-              className={classes.title}
-            >
-              {'StudySpot'}
-            </Typography>
-            <Typography
-              variant="headline"
-              component="h2"
-              color="inherit"
-              gutterBottom
-              className={classes.headline}
-            >
-              {'Quick, simple access to classroom information.'}
-            </Typography>
-            <Chip
-              className={classes.chip}
-              variant="outlined"
-              color="primary"
-              label="Select an option from the menu to begin!"
-            />
-          </div>
+      <div className={classes.container}>
+        <School className={classes.logo} />
+        <div className={classes.text}>
+          <Typography
+            variant="display2"
+            align="center"
+            component="h1"
+            color="inherit"
+            gutterBottom
+            className={classes.title}
+          >
+            {'StudySpot'}
+          </Typography>
+          <Typography
+            variant="headline"
+            component="h2"
+            color="inherit"
+            gutterBottom
+            className={classes.headline}
+          >
+            {'Quick, simple access to classroom information.'}
+          </Typography>
+          <Chip
+            className={classes.chip}
+            label={`Select an option from the menu ${menuLocation} to begin!`}
+          />
         </div>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(Landing);
+export default compose(
+  withStyles(styles),
+  withWidth()
+)(Landing);
