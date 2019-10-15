@@ -44,10 +44,21 @@ const styles = theme => ({
   icon: {
     marginRight: 0
   },
+  mapContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1
+  },
   map: {
     overflow: 'hidden',
     height: '75vh',
     width: '100%'
+  },
+  mapLink: {
+    marginTop: '16px'
+  },
+  buttonLabel: {
+    textAlign: 'center'
   }
 });
 
@@ -141,20 +152,34 @@ class BuildingDetail extends Component {
   renderMapPanel(building) {
     const { classes } = this.props;
 
+    const mapLink = `https://uwaterloo.ca/map/${building.buildingCode}`;
+
     return (
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMore />}>
           <Typography className={classes.heading}>Map</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <div className={classes.map}>
-            <iframe
-              src={`https://uwaterloo.ca/map/${building.buildingCode}`}
-              title="map"
-              width="100%"
-              id="mapiframe"
-              style={this.calculateMapStyles()}
-            />
+          <div className={classes.mapContainer}>
+            <div className={classes.map}>
+              <iframe
+                src={mapLink}
+                title="map"
+                width="100%"
+                id="mapiframe"
+                style={this.calculateMapStyles()}
+              />
+            </div>
+            <Button
+              variant="outlined"
+              color="primary"
+              className={classes.mapLink}
+              href={mapLink}
+              size="small"
+              classes={{ label: classes.buttonLabel }}
+            >
+              Powered by the official University of Waterloo Campus Map
+            </Button>
           </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>
