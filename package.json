@@ -19,7 +19,7 @@
     "babel-eslint": "^10.0.3",
     "body-parser": "^1.18.3",
     "concurrently": "^3.6.1",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "mongoose": "^5.2.9",
